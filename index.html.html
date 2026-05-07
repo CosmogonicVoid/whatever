@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>what are you?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #e7edf5;
+      --surface: #dce4f0;
+      --surface2: #cfd9ec;
+      --border: #a8b8d8;
+      --border2: #7a96c8;
+      --accent: #1877f2;
+      --accent2: #0f5ec4;
+      --accent-light: #c8d9f8;
+      --red: #a01830;
+      --red-light: #f0ccd4;
+      --text-primary: #050e2a;
+      --text-secondary: #1250a8;
+      --text-muted: #4470b8;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 20px;
+    }
+
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; }
+
+    nav {
+      background: var(--accent); padding: 0 1.5rem; height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .nav-brand { font-size: 18px; font-weight: 600; color: #fff; letter-spacing: -0.3px; }
+    .nav-brand i { font-size: 17px; margin-right: 6px; vertical-align: -2px; }
+    .nav-tagline { font-size: 12px; color: rgba(255,255,255,0.7); }
+
+    .container { max-width: 620px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+    .compose { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
+    .compose-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .tab-btn { padding: 6px 16px; font-size: 13px; font-family: 'Inter', sans-serif; border-radius: 20px; border: 0.5px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; font-weight: 400; }
+    .tab-btn i { font-size: 13px; margin-right: 4px; vertical-align: -1px; }
+    .tab-btn.active-opinion { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
+    .tab-btn.active-confession { background: var(--red); color: #fff; border-color: var(--red); font-weight: 500; }
+    .compose textarea { width: 100%; border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 10px 12px; font-size: 14px; font-family: 'Inter', sans-serif; resize: none; background: var(--surface2); color: var(--text-primary); outline: none; line-height: 1.6; transition: border-color 0.15s; }
+    .compose textarea:focus { border-color: var(--accent); }
+    .compose textarea::placeholder { color: var(--text-muted); }
+    .compose-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .anon-badge { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+    .anon-badge i { font-size: 14px; }
+    .char-count { font-size: 12px; color: var(--text-muted); }
+    .char-count.warn { color: var(--red); }
+    .post-btn { padding: 8px 20px; font-size: 13px; font-weight: 500; font-family: 'Inter', sans-serif; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-md); cursor: pointer; transition: opacity 0.15s; }
+    .post-btn:hover { opacity: 0.9; }
+
+    .feed-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .feed-header span { font-size: 13px; color: var(--text-muted); }
+    .filter-group { display: flex; gap: 6px; }
+    .filter-btn { padding: 4px 13px; font-size: 12px; font-family: 'Inter', sans-serif; border-radius: 20px; border: 0.5px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; }
+    .filter-btn.active { background: var(--accent-light); color: var(--accent2); border-color: var(--accent); }
+
+    .post-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    .post-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .post-type { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+    .type-opinion { background: var(--accent-light); color: var(--accent2); }
+    .type-confession { background: var(--red-light); color: var(--red); }
+    .post-time { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+    .post-text { font-size: 15px; color: var(--text-primary); line-height: 1.7; margin-bottom: 14px; }
+
+    .reactions-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .reaction-btn { display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--border); background: var(--surface2); font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer; color: var(--text-secondary); transition: all 0.15s; }
+    .reaction-btn:hover { border-color: var(--border2); background: var(--accent-light); }
+    .reaction-btn.reacted { background: var(--accent-light); border-color: var(--accent); color: var(--accent2); font-weight: 500; }
+    .reply-toggle { margin-left: auto; font-size: 12px; color: var(--text-muted); background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; font-family: 'Inter', sans-serif; transition: color 0.15s; }
+    .reply-toggle:hover { color: var(--text-secondary); }
+    .reply-toggle i { font-size: 15px; }
+
+    .replies-section { margin-top: 12px; border-top: 0.5px solid var(--border); padding-top: 12px; }
+    .reply { display: flex; gap: 10px; margin-bottom: 10px; }
+    .reply-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-light); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--accent2); font-weight: 600; flex-shrink: 0; }
+    .reply-body { flex: 1; }
+    .reply-name { font-size: 12px; color: var(--text-secondary); margin-bottom: 3px; }
+    .reply-text { font-size: 13px; color: var(--text-primary); line-height: 1.6; }
+    .reply-input-row { display: flex; gap: 8px; margin-top: 8px; }
+    .reply-input { flex: 1; padding: 7px 10px; font-size: 13px; font-family: 'Inter', sans-serif; border: 0.5px solid var(--border); border-radius: var(--radius-md); background: var(--surface2); color: var(--text-primary); outline: none; transition: border-color 0.15s; }
+    .reply-input::placeholder { color: var(--text-muted); }
+    .reply-input:focus { border-color: var(--accent); }
+    .reply-send { padding: 7px 14px; font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif; background: transparent; border: 0.5px solid var(--border2); border-radius: var(--radius-md); cursor: pointer; color: var(--text-secondary); transition: background 0.15s; }
+    .reply-send:hover { background: var(--accent-light); }
+
+    .empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 14px; }
+    .empty i { font-size: 36px; display: block; margin-bottom: 12px; color: var(--border2); }
+    .empty p { margin-bottom: 6px; }
+    .empty small { font-size: 12px; opacity: 0.7; }
+
+    footer { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 2rem; padding-bottom: 1rem; }
+
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--text-primary); color: var(--bg); padding: 9px 18px; border-radius: var(--radius-xl); font-size: 13px; transition: transform 0.25s ease; z-index: 100; white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 480px) {
+      nav { padding: 0 1rem; }
+      .nav-tagline { display: none; }
+      .container { padding: 1rem 0.75rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><i class="ti ti-question-mark"></i>what are you?</div>
+  <div class="nav-tagline">say anything. be no one.</div>
+</nav>
+
+<div class="container">
+  <div class="compose">
+    <div class="compose-tabs">
+      <button class="tab-btn active-opinion" id="tab-opinion" onclick="setType('opinion')"><i class="ti ti-flame"></i>hot take</button>
+      <button class="tab-btn" id="tab-confession" onclick="setType('confession')"><i class="ti ti-lock"></i>confession</button>
+    </div>
+    <textarea id="compose-text" rows="3" maxlength="500" placeholder="Share your unfiltered opinion or secret..." oninput="updateCharCount()"></textarea>
+    <div class="compose-footer">
+      <span class="anon-badge"><i class="ti ti-shield-lock"></i>completely anonymous</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="char-count" id="char-count">500</span>
+        <button class="post-btn" id="post-btn" onclick="submitPost()">post it</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="feed-header">
+    <span id="post-count">0 posts</span>
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="setFilter('all',this)">all</button>
+      <button class="filter-btn" onclick="setFilter('opinion',this)">opinions</button>
+      <button class="filter-btn" onclick="setFilter('confession',this)">confessions</button>
+    </div>
+  </div>
+
+  <div id="feed"></div>
+
+  <footer>all posts are anonymous &mdash; no accounts, no tracking, no identity.</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let currentType = 'opinion';
+  let currentFilter = 'all';
+  const anonNames = ['ghost_42','shadow_x','nobody_7','void_user','anon_99','cipher_3','blank_face','echo_17','silent_9','haze_00','drift_x','mist_77'];
+  let posts = [];
+  let nextId = 1;
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function updateCharCount() {
+    const txt = document.getElementById('compose-text').value;
+    const remaining = 500 - txt.length;
+    const el = document.getElementById('char-count');
+    el.textContent = remaining;
+    el.className = 'char-count' + (remaining < 50 ? ' warn' : '');
+  }
+
+  function setType(t) {
+    currentType = t;
+    document.getElementById('tab-opinion').className = 'tab-btn' + (t==='opinion' ? ' active-opinion' : '');
+    document.getElementById('tab-confession').className = 'tab-btn' + (t==='confession' ? ' active-confession' : '');
+    document.getElementById('post-btn').style.background = t==='opinion' ? '#1877f2' : '#a01830';
+    document.getElementById('compose-text').placeholder = t==='opinion'
+      ? 'Share your unfiltered take on anything...'
+      : "Confess something you've never said out loud...";
+  }
+
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }
+
+  function randomAnon() { return anonNames[Math.floor(Math.random()*anonNames.length)]; }
+
+  function submitPost() {
+    const txt = document.getElementById('compose-text').value.trim();
+    if (!txt) return;
+    const emojis = ['🔥','💀','😭','👀','💯','🤯','😤','👏'];
+    const picked = [...emojis].sort(()=>Math.random()-0.5).slice(0,3);
+    const reactions = {};
+    picked.forEach(e => reactions[e]={count:0,reacted:false});
+    posts.unshift({id:nextId++, type:currentType, text:txt, time:'just now', reactions, showReplies:false, replies:[]});
+    document.getElementById('compose-text').value='';
+    updateCharCount();
+    showToast('posted anonymously ✓');
+    render();
+  }
+
+  function toggleReaction(postId, emoji) {
+    const p = posts.find(x=>x.id===postId);
+    if (!p) return;
+    const r = p.reactions[emoji];
+    r.reacted ? (r.count--, r.reacted=false) : (r.count++, r.reacted=true);
+    render();
+  }
+
+  function toggleReplies(postId) {
+    const p = posts.find(x=>x.id===postId);
+    if (p) p.showReplies = !p.showReplies;
+    render();
+  }
+
+  function sendReply(postId) {
+    const inp = document.getElementById('reply-input-'+postId);
+    if (!inp) return;
+    const txt = inp.value.trim();
+    if (!txt) return;
+    const p = posts.find(x=>x.id===postId);
+    if (p) {
+      p.replies.push({
+        avatar: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random()*26)],
+        name: randomAnon(), text: txt
+      });
+      inp.value='';
+    }
+    render();
+    setTimeout(()=>{ const i=document.getElementById('reply-input-'+postId); if(i) i.focus(); },50);
+  }
+
+  function handleReplyKey(e, postId) {
+    if (e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendReply(postId); }
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function render() {
+    const visible = currentFilter==='all' ? posts : posts.filter(p=>p.type===currentFilter);
+    document.getElementById('post-count').textContent = visible.length+' post'+(visible.length!==1?'s':'');
+    const feed = document.getElementById('feed');
+    if (!visible.length) {
+      feed.innerHTML=`<div class="empty"><i class="ti ti-ghost"></i><p>no posts yet.</p><small>be the first to say something.</small></div>`;
+      return;
+    }
+    feed.innerHTML = visible.map(p => {
+      const reactionHTML = Object.entries(p.reactions).map(([emoji,data]) =>
+        `<button class="reaction-btn ${data.reacted?'reacted':''}" onclick="toggleReaction(${p.id},'${emoji}')">${emoji} ${data.count}</button>`
+      ).join('');
+      const repliesHTML = p.showReplies ? `
+        <div class="replies-section">
+          ${p.replies.length===0
+            ? '<div style="font-size:13px;color:#4470b8;margin-bottom:8px;">no replies yet — be the first</div>'
+            : p.replies.map(r=>`
+                <div class="reply">
+                  <div class="reply-avatar">${escapeHtml(r.avatar)}</div>
+                  <div class="reply-body">
+                    <div class="reply-name">${escapeHtml(r.name)}</div>
+                    <div class="reply-text">${escapeHtml(r.text)}</div>
+                  </div>
+                </div>`).join('')}
+          <div class="reply-input-row">
+            <input class="reply-input" id="reply-input-${p.id}" placeholder="reply anonymously..." onkeydown="handleReplyKey(event,${p.id})" maxlength="300">
+            <button class="reply-send" onclick="sendReply(${p.id})">send</button>
+          </div>
+        </div>` : '';
+      return `
+        <div class="post-card">
+          <div class="post-meta">
+            <span class="post-type type-${p.type}">${p.type==='opinion'?'🔥 hot take':'🔒 confession'}</span>
+            <span class="post-time">${p.time}</span>
+          </div>
+          <p class="post-text">${escapeHtml(p.text)}</p>
+          <div class="reactions-row">
+            ${reactionHTML}
+            <button class="reply-toggle" onclick="toggleReplies(${p.id})">
+              <i class="ti ti-message-circle"></i>
+              ${p.replies.length} ${p.showReplies?'▲':'▼'}
+            </button>
+          </div>
+          ${repliesHTML}
+        </div>`;
+    }).join('');
+  }
+
+  render();
+</script>
+</body>
+</html>
